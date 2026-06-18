@@ -41,19 +41,16 @@
             }
         }
 
-        /* Animasi langsung untuk Home saat web pertama kali dibuka */
         .animate-load {
             animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* Keadaan awal section lain sebelum di-scroll (disembunyikan dulu) */
         .scroll-reveal {
             opacity: 0;
             transform: translateY(40px);
             transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Keadaan setelah section terlihat di layar saat di-scroll */
         .scroll-reveal.active {
             opacity: 1;
             transform: translateY(0);
@@ -139,17 +136,21 @@
             position: relative;
         }
 
+        /* Menggunakan vw (viewport width) agar teks WELCOME mengecil otomatis di HP & tidak terpotong */
         .welcome-bg {
             position: absolute;
             top: 70px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 9rem;
+            font-size: 12vw;
             font-weight: 800;
             color: rgba(0, 0, 0, 0.04);
-            letter-spacing: 15px;
+            letter-spacing: 1vw;
             z-index: -1;
             user-select: none;
+            white-space: nowrap;
+            text-align: center;
+            width: 100%;
         }
 
         .hero-content {
@@ -227,6 +228,7 @@
             border-radius: 16px;
             overflow: hidden;
             height: 250px;
+            width: 100%;
         }
 
         .about-img img {
@@ -515,25 +517,77 @@
             background: #059669;
         }
 
-        /* --- RESPONSIVE MEDIA QUERIES --- */
+        /* --- FITUR MODAL / LIGHTBOX (PERBESAR GAMBAR) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 85%;
+            max-height: 80%;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #10b981;
+        }
+
+        /* --- RESPONSIVE MEDIA QUERIES (PERBAIKAN TATA LETAK) --- */
         @media (max-width: 900px) {
             .hero-content {
                 flex-direction: column;
                 text-align: center;
+                gap: 30px;
+            }
+            .hero-text-left h1 {
+                font-size: 3rem;
             }
             .hero-text-right {
                 text-align: center;
+                order: 3; /* Memastikan teks kanan pindah ke paling bawah */
             }
             .hero-text-left p {
                 margin: 0 auto;
             }
-            .welcome-bg {
-                font-size: 5rem;
-                top: 90px;
-                letter-spacing: 8px;
-            }
             .about-card {
                 flex-direction: column;
+                text-align: center;
             }
             .project-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -541,6 +595,10 @@
             .message-form-card {
                 flex-direction: column-reverse;
                 padding: 30px;
+                text-align: center;
+            }
+            .submit-btn {
+                align-self: center; /* Tombol submit form ketengah di tablet */
             }
         }
 
@@ -588,8 +646,25 @@
             .project-grid, .project-grid-bottom {
                 grid-template-columns: 1fr;
             }
-            .hero-text-left h1 { font-size: 2.5rem; }
-            .hero-text-right h2 { font-size: 2rem; }
+
+            /* Memastikan struktur layout mobile HP benar-benar center (tidak dominan kiri) */
+            .hero-text-left h1 { 
+                font-size: 2.3rem; 
+            }
+            .hero-text-right h2 { 
+                font-size: 1.8rem; 
+            }
+            .about-info h3 {
+                font-size: 1.6rem;
+            }
+            #contact h2 {
+                font-size: 1.8rem;
+            }
+            .close-modal {
+                top: 15px;
+                right: 20px;
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -618,7 +693,7 @@
 
     <section id="home" class="animate-load">
         <div class="welcome-bg">WELCOME</div>
-        <br><br>
+        <br><br><br><br>
         <div class="container hero-content">
             <div class="hero-text-left">
                 <h1>I'M<br>AKBAR</h1>
@@ -722,25 +797,25 @@
             <p>If you have a question, just reach out. I'd be happy to connect with you.</p>
             <br><br>
             <div class="social-cards">
-                <a href="mailto:handikaakbar@gmail.com" class="social-box">
+                <a href="mailto:handikaakbara@gmail.com" class="social-box">
                     <i class="fa-regular fa-envelope" style="color: #ea4335;"></i>
                     <div class="social-info">
                         <h5>Email</h5>
-                        <p>handikaakbar@gmail.com</p>
+                        <p>handikaakbara@gmail.com</p>
                     </div>
                 </a>
-                <a href="https://instagram.com/gunya.20" target="_blank" class="social-box">
+                <a href="https://instagram.com/arrya.00" target="_blank" class="social-box">
                     <i class="fa-brands fa-instagram" style="color: #e1306c;"></i>
                     <div class="social-info">
                         <h5>Instagram</h5>
-                        <p>@gunya.20</p>
+                        <p>@arrya.00</p>
                     </div>
                 </a>
-                <a href="https://github.com/gunzexz02" target="_blank" class="social-box">
+                <a href="https://github.com/barbaraaO-O" target="_blank" class="social-box">
                     <i class="fa-brands fa-github" style="color: #333;"></i>
                     <div class="social-info">
                         <h5>Github</h5>
-                        <p>@gunzexz02</p>
+                        <p>@barbaraaO-O</p>
                     </div>
                 </a>
             </div>
@@ -767,6 +842,11 @@
         </div>
     </section>
 
+    <div id="imageModal" class="modal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <img class="modal-content" id="imgTarget" alt="Project Zoom Preview">
+    </div>
+
     <script>
         // Logika Interaksi Hamburger Menu untuk HP
         const mobileMenuBtn = document.getElementById('mobile-menu');
@@ -785,12 +865,11 @@
             });
         });
 
-        // --- LOGIKA BARU: ANIMASI FADE IN SAAT SCROLL MANUAL KE BAWAH ---
+        // Logika Animasi Fade In Saat Scroll Manual
         const sectionsToReveal = document.querySelectorAll('.scroll-reveal');
-
         const revealOnScrollOptions = {
-            threshold: 0.15, // Elemen akan muncul jika sudah 15% masuk ke area layar
-            rootMargin: "0px 0px -50px 0px" // Memberikan sedikit jarak sebelum memicu animasi
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
         };
 
         const revealObserver = new IntersectionObserver(function(entries, observer) {
@@ -799,7 +878,7 @@
                     return; 
                 } else {
                     entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Cukup animasi sekali saja saat di-scroll pertama kali
+                    observer.unobserve(entry.target);
                 }
             });
         }, revealOnScrollOptions);
@@ -808,6 +887,33 @@
             revealObserver.observe(section);
         });
 
+        // --- STRUKTUR JAVASCRIPT BARU: FITUR KLIK UNTUK PERBESAR GAMBAR PROJECT ---
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('imgTarget');
+        const closeModalBtn = document.getElementById('closeModal');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        projectCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Mengambil link gambar dari tag <img> yang ada di dalam thumbnail kartu ini
+                const srcGambar = this.querySelector('.project-img img').src;
+                
+                modal.classList.add('show');
+                modalImg.src = srcGambar;
+            });
+        });
+
+        // Tutup modal saat menekan tanda silang (X)
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        // Tutup modal otomatis saat area luar gambar (latar belakang hitam) diklik
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
 
         // Logika penanganan submit form
         document.getElementById('contactForm').addEventListener('submit', function(e) {
